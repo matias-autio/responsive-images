@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive images - Hero</title>
+  </head>
+  <body>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        line-height: 1.5;
+      }
+
+      img {
+        max-width: 100%;
+        width: 100%;
+        display: block;
+      }
+
+      xmp {
+        background-color: whitesmoke;
+        overflow-x: auto;
+      }
+
+      dl > dt {
+        font-weight: bold;
+        font-style: oblique;
+        margin-bottom: 0.5rem;
+      }
+
+      dd {
+        margin-bottom: 1rem;
+      }
+
+      ul {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      ul ul {
+        font-size: 0.85rem;
+      }
+
+      code {
+        font-family: monospace;
+        background-color: whitesmoke;
+        border-radius: 3px;
+        border: 1px solid lightgrey;
+        padding: 0.125em 0.35em;
+      }
+
+      .blocks {
+        display: grid;
+        gap: 2rem;
+      }
+
+      .two-columns {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media screen and (min-width: 768px) {
+        .two-columns {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .cards {
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media screen and (min-width: 1024px) {
+        .cards {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+      }
+
+      @media (600px <= width < 1024px) {
+        .card {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+        }
+      }
+    </style>
+
+    <h1>Responsive images</h1>
+    <div class="blocks">
+      <div class="container">
+        <dl>
+          <dt>Hero</dt>
+          <dd>
+            Same aspect-ratio image on mobile and desktop, but higher resolution
+            on screens over 800px.
+          </dd>
+        </dl>
+        <blockquote>
+          <p>Expected behaviour:</p>
+          <ul>
+            <li>
+              When the viewport width is below 800px, the desktop image is
+              shown.
+            </li>
+            <li>
+              When the viewport width is over 800px, the desktop 2x image is
+              shown
+            </li>
+            <li>
+              When the viewport width is above 566px and the pixel density is
+              2.0, the desktop 2x image is shown.
+            </li>
+            <ul>
+              <li>
+                At a viewport width of 566px and a pixel density of 2.0, the
+                "required" image width is 1132px.
+              </li>
+              <li>
+                Since 1600px (1600w) is larger than 1132px and meets the
+                requirement, the browser chooses the higher-resolution 1600w
+                image to provide the best visual clarity.
+              </li>
+              <li>
+                If the viewport width is reduced to 565px, the required width
+                drops to 1130px, still under the 1132px threshold that would
+                justify choosing the 1600w image based on "better fit" alone.
+              </li>
+            </ul>
+          </ul>
+        </blockquote>
+        <picture>
+          <source
+            srcset="
+              images/hero-desktop.png     800w,
+              images/hero-desktop_2x.png 1600w
+            "
+          />
+          <img src="images/hero-desktop.png" alt="Hero" />
+        </picture>
+      </div>
+
+      <div class="container">
+        <dl>
+          <dt>Hero with art direction</dt>
+          <dd>
+            Different image on mobile and desktop with multiple resolutions for
+            each. Correct image is chosen based on screen size and pixel
+            density.
+          </dd>
+        </dl>
+        <blockquote>
+          <p>Expected behaviour:</p>
+          <ul>
+            <li>
+              When the viewport width is below 400px and with a pixel density of
+              1.0, the mobile image is shown.
+            </li>
+            <li>
+              When the viewport width is below 400px and with a pixel density of
+              2.0, the mobile 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is over 768px but under 800px and with a
+              pixel density of 1, the desktop image is shown.
+            </li>
+            <li>
+              When the viewport width is over 800px the desktop 2x image is
+              shown.
+            </li>
+            <li>
+              When the viewport width is over between 768px but with a pixel
+              density of 2.0, the desktop 2x image is shown.
+            </li>
+          </ul>
+        </blockquote>
+
+        <picture>
+          <source
+            media="(min-width: 768px)"
+            srcset="
+              images/hero-desktop.png     800w,
+              images/hero-desktop_2x.png 1600w
+            "
+          />
+
+          <source
+            srcset="images/hero-mobile.png 400w, images/hero-mobile_2x.png 800w"
+          />
+          <img src="images/hero-desktop.png" alt="Hero" />
+        </picture>
+      </div>
+
+      <div class="container">
+        <dl>
+          <dt>Two columns</dt>
+          <dd>
+            Same aspect ratio image on mobile and desktop but with different
+            resolutions based on viewport width, pixel density and layout.
+          </dd>
+        </dl>
+        <blockquote>
+          <p>Expected behaviour:</p>
+          <ul>
+            <li>
+              When the viewport width is below 600px and with a pixel density of
+              1.0, the square image is shown.
+            </li>
+            <li>
+              When the viewport width is over 600px but below 768px and with a
+              pixel density of 2.0, the square 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is over 768px the layout changes to
+              columns. The square image is shown if the viewport width is below
+              1201px and with a pixel density of 1.0. This is because of the
+              sizes="50vw" attribute. It tells the browser that the image needed
+              is only 50% of the viewport width.
+            </li>
+            <li>
+              When the viewport width is above 1200px with a pixel density of
+              1.0, the desktop 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is over 849px with a pixel density of 2.0,
+              the desktop 2x image is shown. This is because even if the layout
+              is in two columns and the required image would normally be only
+              50% of the viewport width, the pixel density makes the browser
+              require a higher resolution image.
+            </li>
+          </ul>
+        </blockquote>
+
+        <div class="two-columns">
+          <div>
+            <h3>Left column</h3>
+            <p>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime
+              unde labore totam quo, animi iure cupiditate quibusdam illum
+              fugiat culpa ipsum recusandae provident assumenda sequi
+              voluptatum? Deleniti, ea veniam? Quos!
+            </p>
+          </div>
+          <div>
+            <picture>
+              <source
+                media="(min-width: 768px)"
+                srcset="images/square.png 600w, images/square_2x.png 1200w"
+                sizes="50vw"
+              />
+
+              <source
+                srcset="images/square.png 600w, images/square_2x.png 1200w"
+                sizes="100vw"
+              />
+              <img src="images/square.png" alt="Square" />
+            </picture>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <dl>
+          <dt>Cards</dt>
+          <dd>
+            Three cards side by side. Same aspect ratio image on mobile and
+            desktop but with different resolutions based on viewport width,
+            pixel density and layout.
+          </dd>
+        </dl>
+        <blockquote>
+          <p>Expected behaviour:</p>
+          <ul>
+            <li>
+              When the viewport width is
+              <code>width <= 400px</code> and with a pixel density of 1.0, the
+              card image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>401px <= width <= 599px</code> and with a pixel density of
+              1.0, the card 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>600px <= width <= 800px</code> and with a pixel density of
+              1.0, the card image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>801px <= width <= 1023px</code> and with a pixel density of
+              1.0, the card 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>1024px <= width <= 1212px</code> and with a pixel density of
+              1.0, the card image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>1213px <= width <= 1818px</code> and with a pixel density of
+              1.0, the card 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is 1819px and above and with a pixel
+              density of 1.0, the card 3x image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>347px <= width <= 600px</code> and above and with a pixel
+              density of 2.0, the card 3x image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>600px <= width <= 692px</code> and above and with a pixel
+              density of 2.0, the card 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>693px <= width <= 1023px</code> with a pixel density of 2.0,
+              the card 3x image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>1024px <= width <= 1049px</code> with a pixel density of
+              2.0, the card 2x image is shown.
+            </li>
+            <li>
+              When the viewport width is
+              <code>1050px >= width</code> with a pixel density of 2.0, the card
+              3x image is shown.
+            </li>
+          </ul>
+        </blockquote>
+
+        <div class="cards">
+          <div class="card">
+            <div>
+              <picture>
+                <source
+                  media="(min-width: 1024px)"
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="33vw"
+                />
+
+                <source
+                  media="(min-width: 600px)"
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="50vw"
+                />
+
+                <source
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="100vw"
+                />
+
+                <img src="images/card.png" alt="Card" />
+              </picture>
+            </div>
+            <div>
+              <h3>Card 1: Lorem ipsum</h3>
+              <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime
+                unde labore totam quo, animi iure cupiditate quibusdam illum
+                fugiat culpa ipsum recusandae provident assumenda sequi
+                voluptatum? Deleniti, ea veniam? Quos!
+              </p>
+            </div>
+          </div>
+          <div class="card">
+            <div>
+              <picture>
+                <source
+                  media="(min-width: 1024px)"
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="33vw"
+                />
+
+                <source
+                  media="(min-width: 600px)"
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="50vw"
+                />
+
+                <source
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="100vw"
+                />
+
+                <img src="images/card.png" alt="Card" />
+              </picture>
+            </div>
+            <div>
+              <h3>Card 2: Animi iure cupiditate</h3>
+              <p>
+                Lorem ipsum dolor sit amet. Sit fugiat iusto non nesciunt culpa
+                in omnis assumenda. Ad officiis voluptas ex illo similique aut
+                blanditiis nihil sed perspiciatis tempore!
+              </p>
+            </div>
+          </div>
+          <div class="card">
+            <div>
+              <picture>
+                <source
+                  media="(min-width: 1024px)"
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="33vw"
+                />
+
+                <source
+                  media="(min-width: 600px)"
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="50vw"
+                />
+
+                <source
+                  srcset="
+                    images/card.png    400w,
+                    images/card_2x.png 600w,
+                    images/card_3x.png 800w
+                  "
+                  sizes="100vw"
+                />
+
+                <img src="images/card.png" alt="Card" />
+              </picture>
+            </div>
+            <div>
+              <h3>Card 3: Est totam doloribus</h3>
+              <p>
+                Sit similique ducimus quo consequatur perspiciatis sed tempore
+                dignissimos 33 expedita quaerat eum temporibus ipsam vel
+                consequuntur obcaecati? Est totam doloribus in autem doloremque
+                et eaque expedita ut dicta dolorem aut magni dolor?
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
